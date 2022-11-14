@@ -1,4 +1,4 @@
-{
+{ 
   "name": "maquinadeturing",
   "version": "0.1.0",
   "private": true,
@@ -39,5 +39,9 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "eslint-config-react-app": "^7.0.1",
+    "jest-editor-support": "^30.2.1"
   }
 }

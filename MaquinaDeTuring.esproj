@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.VisualStudio.JavaScript.Sdk/0.5.26-alpha">
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>640d7a70-678f-4d6a-8919-ce73cdd55a5c</ProjectGuid>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupCommand>set BROWSER=none&amp;&amp;npm start</StartupCommand>
+    <JavaScriptTestRoot>src\</JavaScriptTestRoot>
+    <JavaScriptTestFramework>Jest</JavaScriptTestFramework>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Remove="src\Dominio\Enums\Direccion.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Include="src\Dominio\Clases\maquinaTuring.ts" />
+    <TypeScriptConfiguration Include="src\Dominio\Clases\cabezal.ts" />
+    <TypeScriptConfiguration Include="src\Dominio\Clases\transicion.ts" />
+    <TypeScriptConfiguration Include="src\Dominio\Clases\estado.ts" />
+    <TypeScriptConfiguration Include="src\Dominio\Enums\direccion.ts" />
+  </ItemGroup>
+</Project>
