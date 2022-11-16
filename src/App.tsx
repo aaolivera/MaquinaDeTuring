@@ -93,38 +93,6 @@ function App() {
         <div className="App">
             <body>
                 <div className="container-fluid box">
-                    <div className="row header">
-                        <div className="col-2" style={{ marginBottom: "15px" }}>
-                            <Card style={{ marginTop: "15px", height: "100%" }}>
-                                <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Cabezal</Card.Header>
-                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? "#d1e7dd" : "white", paddingBottom:0 }}>
-                                    <Card.Title>Estado:  q{maquinaTuringState?.EstadoActualId}</Card.Title>
-                                    <Card.Text>Actual:  {maquinaTuringState?.Leer}</Card.Text>
-                                    {maquinaTuringState?.Finalizada ? <Card.Title>Finalizado</Card.Title> : null}
-                                    <div className="row">
-                                        <div className="col-6">
-                                            <Button variant="primary" size="sm" onClick={() => Cargar()}>
-                                                IngresarSarta
-                                            </Button></div>
-                                        <div className="col-6">
-                                            <Button variant="primary" size="sm" onClick={() => Ejecutar()}>
-                                                Ejecutar
-                                            </Button></div>
-                                    </div>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                        <div className="col-10" style={{ marginBottom: "15px" }}>
-                            <Card style={{ marginTop: "15px", height: "100%" }}>
-                                <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Cinta</Card.Header>
-                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? "#d1e7dd" : "white" }}>
-                                    <ListGroup horizontal='sm' numbered style={{ overflow: "auto" }}>
-                                        {maquinaTuringState?.Cinta.map((x, index) => <ListGroup.Item style={{ backgroundColor: maquinaTuringState.CabezalPosicion == index ? "#d1e7dd" : "white" }}>{x}</ListGroup.Item>)}
-                                    </ListGroup>
-                                </Card.Body>
-                            </Card>
-                        </div>
-                    </div>
                     <div className="row content">
                         <div className="col-12">
                             <Card style={{ marginTop: "15px", height: "95%" }}>
@@ -143,6 +111,37 @@ function App() {
                         </div>
                     </div>
 
+                    <div className="row header">
+                        <div className="col-2" style={{ marginBottom: "15px" }}>
+                            <Card style={{ marginBottom: "15px", height: "100%" }}>
+                                <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Cabezal</Card.Header>
+                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? "#d1e7dd" : "white", paddingBottom:0 }}>
+                                    <Card.Title>Estado:  q{maquinaTuringState?.EstadoActualId}</Card.Title>
+                                    <Card.Text>Actual:  {maquinaTuringState?.Leer}</Card.Text>
+                                    <div className="row">
+                                        <div className="col-6">
+                                            <Button variant="primary" size="sm" onClick={() => Cargar()}>
+                                                IngresarSarta
+                                            </Button></div>
+                                        <div className="col-6">
+                                            <Button variant="primary" size="sm" onClick={() => Ejecutar()}>
+                                                Ejecutar
+                                            </Button></div>
+                                    </div>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                        <div className="col-10" style={{ marginBottom: "15px" }}>
+                            <Card style={{ marginBottom: "15px", height: "100%" }}>
+                                <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Cinta</Card.Header>
+                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? "#d1e7dd" : "white" }}>
+                                    <ListGroup horizontal='sm' numbered style={{ overflow: "auto" }}>
+                                        {maquinaTuringState?.Cinta.map((x, index) => <ListGroup.Item style={{ backgroundColor: maquinaTuringState.CabezalPosicion == index ? "#d1e7dd" : "white" }}>{x}</ListGroup.Item>)}
+                                    </ListGroup>
+                                </Card.Body>
+                            </Card>
+                        </div>
+                    </div>
                 </div>
 
 
