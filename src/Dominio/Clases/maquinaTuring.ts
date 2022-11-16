@@ -31,7 +31,7 @@ export class MaquinaTuring {
         return this._alfabetoCinta;
     }
 
-    private get Blanco(): string {
+    public get Blanco(): string {
         return this._blanco;
     }
 
@@ -40,7 +40,7 @@ export class MaquinaTuring {
         return this._cinta;
     }
 
-    private get Cabezal(): Cabezal {
+    public get Cabezal(): Cabezal {
         return this._cabezal;
     }
 
@@ -56,8 +56,26 @@ export class MaquinaTuring {
         return this._exitoso;
     }
 
-    // 
-    public constructor(alfabetoEntrada: string[], alfabetoCinta: string[], blanco: string, estados: Estado[], estadoInicial: Estado, estadosFinales: Estado[]) {
+    public get Inicializada(): boolean {
+        return this._estadosFinales.length > 0;
+    }
+
+    //
+
+    public constructor() {
+        this._alfabetoCinta = [];
+        this._alfabetoEntrada = [];
+        this._blanco = '';
+        this._estados = [];
+        this._estadoActual = new Estado(0,false);
+        this._estadosFinales = [];
+        this._cinta = [];
+        this._exitoso = false;
+        this._finalizada = false;
+        this._cabezal = new Cabezal(this.Cinta);
+    }
+
+    public Inicializar(alfabetoEntrada: string[], alfabetoCinta: string[], blanco: string, estados: Estado[], estadoInicial: Estado, estadosFinales: Estado[]) {
         this._alfabetoCinta = alfabetoCinta;
         this._alfabetoEntrada = alfabetoEntrada;
         this._blanco = blanco;

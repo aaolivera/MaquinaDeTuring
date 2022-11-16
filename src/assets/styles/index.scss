@@ -1,0 +1,208 @@
+@use 'fonts';
+@use 'TabFolder';
+
+body {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: sans-serif;
+  font-size: 16px;
+}
+
+// Toolbar
+.tool-bar {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    align-items: stretch;
+    align-content: center;
+    background-color: black;
+    color: white;
+
+    .tool-item {
+        box-sizing: border-box;
+        height: 100%;
+    
+        &.expand {
+            flex-grow: 1;
+        }
+    }
+}
+
+.diagram-panel.split-start {
+    // Code Editor
+    textarea.code-editor {
+        padding: 10px;
+        font-family: 'Anonymous Pro', monospace;
+        font-size: 16px;
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        resize: none;
+        box-sizing: border-box;
+        border: none;
+        overflow: auto;
+    }
+}
+
+// Diagram display area
+.diagram-container.showcase {
+    box-sizing: border-box;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 5px;
+    overflow: scroll;
+    cursor: grab;
+
+    &.dragging{
+        cursor: grabbing;
+    }
+}
+
+.split-start, .split-end {
+    background-color: white;
+}
+
+.split-bar {
+    background-color: black;
+    user-select: none;
+
+    &.split-dir-v {
+        cursor: col-resize;
+    }
+    &.split-dir-h {
+        cursor: row-resize;
+    }
+}
+
+// Tool-Item / Option-Group
+.tool-bar .tool-item .option-group {
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    
+    .item {
+        display: flex;
+        flex-wrap: nowrap;
+        align-items: center;
+        padding: 10px;
+        cursor: pointer;
+        
+        &:hover {
+            background-color: #555;
+        }
+
+        &.selected {
+            background-color: #333;
+            font-weight: bold;
+        }
+    }
+}
+
+// Tool-Item / Switch
+.tool-bar .tool-item .switch {
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #555;
+    }
+
+    &.selected {
+        background-color: #333;
+        font-weight: bold;
+    }
+}
+
+// Tool-Item / Button
+.tool-bar .tool-item .button {
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: 10px;
+    cursor: pointer;
+
+    border: none;
+    background-color: black;
+    color: white;
+
+    font-family: sans-serif;
+    font-size: 16px;
+
+    &:hover {
+        background-color: #555;
+    }
+
+    &.selected {
+        background-color: #333;
+        font-weight: bold;
+    }
+}
+
+.app-title {
+    font-size: 24px;
+    letter-spacing: 2px;
+    box-sizing: border-box;
+    height: 100%;
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    padding: 10px;
+    cursor: default;
+}
+
+.menu-panel.split-end {
+    overflow-y: scroll;
+
+    .tab-button-group {
+        position: sticky;
+        top: 0;
+    }
+}
+
+svg {
+    text {
+        user-select: none;
+    }
+}
+
+.syntax, .about {
+    h1, h2, h3, h4, h5, h6 { margin: 0 0 1em 0; }
+    h1, h2, h3, h4, h5, h6 { font-size: 20px; }
+
+    pre {
+        border-radius: 5px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ebeafa;
+        background-color: #fdfcfe;
+        font-size: 14px;
+        padding: 10px;
+        font-family: 'Anonymous Pro', monospace;
+    }
+    code {
+        border-radius: 5px;
+        border-width: 1px;
+        border-style: solid;
+        border-color: #ebeafa;
+        background-color: #fdfcfe;
+        padding: 1px;
+        font-family: 'Anonymous Pro', monospace;
+    }
+}

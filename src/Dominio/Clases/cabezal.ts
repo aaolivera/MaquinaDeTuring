@@ -13,6 +13,10 @@ export class Cabezal {
         return this._finalizado;
     }
 
+    public get Posicion(): number {
+        return this._posicion;
+    }
+
     public constructor(cinta: string[]) {
         this._cinta = cinta;
         this._posicion = 0;
