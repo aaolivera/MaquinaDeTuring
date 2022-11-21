@@ -18,20 +18,18 @@ import { RenderOptions } from './lib/machine-formatter'
 function App() {
     const [input, setInput] = useState("");
     const [options, setOptions] = useState(new RenderOptions())
-
-    let machine = null
+    const [maquinaTuring] = useState<MaquinaTuring>(new MaquinaTuring());
+    const [maquinaTuringState, setmaquinaTuringState] = useState<MaquinaTuringModel>();
 
     function setMachine(m: any) {
-        machine = m
+        console.log(m);
+       
     }
 
     function onChangeInput(e: any) {
         console.log(e)
         setInput(e.target.value)
     }
-
-    const [maquinaTuring] = useState<MaquinaTuring>(new MaquinaTuring());
-    const [maquinaTuringState, setmaquinaTuringState] = useState<MaquinaTuringModel>();
 
     function InicializarMaquina() {
         let blanco: string = 'β';
@@ -55,8 +53,8 @@ function App() {
 
         let estados: Estado[] = [q1, q2, q3];
         maquinaTuring.Inicializar(
-            ['1'],
-            [blanco, '1'],
+            ['1', '2', '3','9'],
+            [blanco, '1', '2', '3','9'],
             blanco,
             estados,
             q1,
@@ -65,8 +63,7 @@ function App() {
     }
 
     function Cargar() {
-        InicializarMaquina();
-        maquinaTuring.IngresarSarta('11');
+        maquinaTuring.IngresarSarta('1199');
         console.log(maquinaTuring);
         UpdateState();
     }
@@ -96,14 +93,14 @@ function App() {
                     <div className="row content">
                         <div className="col-12">
                             <Card style={{ marginTop: "15px", height: "95%" }}>
-                                <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Autómata</Card.Header>
+                                <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Máquina de turing</Card.Header>
                                 <Card.Body>
                                     <div className='row' style={{ height: "100%" }}>
                                         <div className='col-2 col-2-mod diagram-panel split-dir-v split-start'>
                                             <CodeEditor value={input} onChange={onChangeInput} />
                                         </div>
                                         <div className='col-10'>
-                                            <Diagram input={input} options={options} machineSetter={setMachine} />
+                                            <Diagram input={input} options={options} machineSetter={setMachine} estadoActual={maquinaTuringState?.EstadoActualId} />
                                         </div>
                                     </div>
                                 </Card.Body>
