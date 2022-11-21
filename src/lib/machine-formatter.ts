@@ -42,7 +42,7 @@ class RMachine {
 }
 
 
-export function generateVizCode(machine: Machine, options: RenderOptions): string {
+export function generateVizCode(machine: Machine, options: RenderOptions, estadoActual: number): string {
     const graph = new Graph()
 
     graph.rankdir = options.dir
@@ -52,6 +52,10 @@ export function generateVizCode(machine: Machine, options: RenderOptions): strin
         const node = graph.createNode(state.name)
         node.label = state.label ?? state.name
         node.shape = (state.accepted ? 'doublecircle' : 'circle')
+        if(state.name == 'q'+ estadoActual){
+            node.fillcolor = '#d1e7dd'
+            node.style = 'filled'
+        }
     }
 
     for (const state of machine.states.filter(s => s.initial)) {

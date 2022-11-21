@@ -14,8 +14,6 @@ export function parseMachine(input: string): Machine {
 
         const location = source.getLocation()
         const active = (
-            parseTitle(ctx) ||
-            parseStyle(ctx) ||
             parseStates(ctx) ||
             false
         )
@@ -39,189 +37,112 @@ export function parseMachine(input: string): Machine {
     return machine
 }
 
-
-function parseTitle(ctx: Context): boolean {
-    return ctx.source.transaction(() => {
-        const keyword = ctx.source.pullKeyword()
-        
-        if (keyword !== 'title') {
-            return false
-        }
-    
+function isInitial(ctx: Context){
+    if (ctx.source.pullToken('->')) {
         ctx.source.skipSpaces()
+        return true;
+    }
+    return false;
+}
 
-        ctx.machine.title = ctx.source.pullText(['\n'])
+function isInitialAccepted(ctx: Context){
+    if (ctx.source.pullToken('=>')) {
+        ctx.source.skipSpaces()
+        return true;
+    }
+    return false;
+}
+
+function getSources(ctx: Context, initial:boolean, accepted:boolean){
+    const sources: StateData[] = []
     
-        return true
-    })
+    while (true) {
+        const name = ctx.source.pullName()
+        if (name === null) {
+            if (sources.length === 0 && !initial && !accepted) {
+                return false
+            }
+            else {
+                throw ctx.source.error('Expected state name.')
+            }
+        }
+        
+        sources.push({ name, initial, accepted })
+        
+        ctx.source.skipSpaces()
+         if (ctx.source.pullToken(',')) {
+             ctx.source.skipLines()
+         }
+         else {
+             break
+         }
+    }
+    return sources;
 }
 
-function parseStyle(ctx: Context): boolean {
-    return false
+function istransitionMode(ctx: Context){
+    let transitionMode = false
+
+    if (ctx.source.pullToken('->')) {
+        transitionMode = true
+    }
+    return transitionMode;
 }
 
+function getTarget(ctx: Context){
+    ctx.source.skipSpaces()
+
+    const name = ctx.source.pullName()
+    if (name === null) {
+        throw ctx.source.error('Expected target state name.')
+    }
+
+    ctx.source.skipSpaces()
+    return { name, initial: null, accepted: null };
+}
+
+function getSymbol(ctx: Context){
+    const symbol = ctx.source.pullText(['\n'])
+    if (symbol === null) {
+        throw ctx.source.error('Expected transition symbols.')
+    }
+
+    var matchs = symbol.match(/^([1-9]|[1-9][0-9]|100|0|_),([1-9]|[1-9][0-9]|100|0|_),(L|R|H)$/);
+    if(matchs){
+        return [matchs[1], matchs[2], matchs[3]];
+    }        
+    throw ctx.source.error('Expected Symbol <num>,<num>,<L R H>. :<' + symbol+'>')
+
+}
 
 function parseStates(ctx: Context): boolean {
     return ctx.source.transaction(() => {
-        let initial = null    
-        let accepted = null
-    
-        if (ctx.source.pullToken('->')) {
-            initial = true
-
-            ctx.source.skipSpaces()
-        }
-        else if (ctx.source.pullToken('=>')) {
-            initial = true
-            accepted = true
-
-            ctx.source.skipSpaces()
-        }
-    
-        const sources: StateData[] = []
-    
-        while (true) {
-            const name = ctx.source.pullName()
-            if (name === null) {
-                if (sources.length === 0 && !initial && !accepted) {
-                    return false
-                }
-                else {
-                    throw ctx.source.error('Expected state name.')
-                }
-            }
-            
-            sources.push({ name, initial, accepted })
-            
-            ctx.source.skipSpaces()
-            if (ctx.source.pullToken(',')) {
-                ctx.source.skipLines()
-            }
-            else {
-                break
-            }
-        }
-
-        let transitionMode = false
-
-        if (ctx.source.pullToken('->')) {
-            initial = null
-            accepted = null
-            transitionMode = true
-        }
-        else if (ctx.source.pullToken('=>')) {
-            initial = null
-            accepted = true
-            transitionMode = true
-        }
-
-        const targets: StateData[] = []
+        let accepted =  isInitialAccepted(ctx);
+        let initial = accepted || isInitial(ctx);
+        let sources = getSources(ctx, accepted, initial);
         
-        if (transitionMode) {
+        if(sources === false || sources.length === 0) return false;
+        
+        if (istransitionMode(ctx)) {
+            if (sources.length > 1) {
+                throw ctx.source.error('Expected one source state name.')
+            }
+            
+            let target = getTarget(ctx);
+
+            if (!ctx.source.pullToken(':')) {
+                throw ctx.source.error('Expected transition symbols.')
+            }
             ctx.source.skipSpaces()
 
-            while (true) {
-                const name = ctx.source.pullName()
-                if (name === null) {
-                    throw ctx.source.error('Expected target state name.')
-                }
+            const symbol = getSymbol(ctx);
 
-                targets.push({ name, initial, accepted })
+            ctx.source.skipSpaces()
 
-                ctx.source.skipSpaces()
-                if (ctx.source.pullToken(',')) {
-                    ctx.source.skipLines()
-                }
-                else {
-                    break
-                }
-            }
+            const mSource = ctx.machine.state(sources[0])
+            const mTarget = ctx.machine.state(target)
 
-            const symbols: string[] = []
-
-            if (ctx.source.pullToken(':')) {
-                ctx.source.skipSpaces()
-
-                while (true) {
-                    const symbol = ctx.source.pullText([',', '!', '\n'])
-                    if (symbol === null) {
-                        throw ctx.source.error('Expected transition symbols.')
-                    }
-
-                    symbols.push(symbol)
-
-                    ctx.source.skipSpaces()
-                    if (ctx.source.pullToken(',')) {
-                        ctx.source.skipLines()
-                    }
-                    else {
-                        break
-                    }
-                }
-            }
-            else {
-                symbols.push(null)
-            }
-
-            const beforeActions: string[] = []
-            const afterActions: string[] = []
-            
-            if (ctx.source.pullToken('!')) {
-                let beforeActionMode = false
-                let afterActionMode = false
-
-                if (ctx.source.pullToken('>')) {
-                    afterActionMode = true
-                }
-                else if (ctx.source.pullToken('<')) {
-                    beforeActionMode = true
-                }
-                else {
-                    beforeActionMode = true
-                }
-
-                ctx.source.skipSpaces()
-                while(true) {
-                    const action = ctx.source.pullText([',', '\n'])
-                    if (action === null) {
-                        throw ctx.source.error('Expected transition action.')
-                    }
-
-                    if (beforeActionMode) {
-                        beforeActions.push(action)
-                    }
-                    else if (afterActionMode) {
-                        afterActions.push(action)
-                    }
-
-                    ctx.source.skipSpaces()
-                    if (ctx.source.pullToken(',')) {
-                        ctx.source.skipLines()
-                    }
-                    else {
-                        break
-                    }
-                }
-            }
-
-            const mSources = sources.map(s => ctx.machine.state(s))
-            const mTargets = targets.map(s => ctx.machine.state(s))
-
-            for (const mSource of mSources) {
-                for (const mTarget of mTargets) {
-                    for (const symbol of symbols) {
-                        ctx.machine.transition(mSource, mTarget, symbol, null, null)
-                        
-                        for (const action of beforeActions) {
-                            ctx.machine.transition(mSource, mTarget, symbol, action, null)
-                        }
-
-                        for (const action of afterActions) {
-                            ctx.machine.transition(mSource, mTarget, symbol, null, action)
-                        }
-                    }
-                }
-            }
+            ctx.machine.transition(mSource, mTarget, symbol)
         }
         else {
             let label: string
@@ -229,7 +150,7 @@ function parseStates(ctx: Context): boolean {
             if (ctx.source.pullToken(':')) {
                 ctx.source.skipSpaces()
 
-                label = ctx.source.pullText(['!', '\n'])
+                label = ctx.source.pullText(['\n'])
 
                 if (label === null) {
                     throw ctx.source.error('Expected state label.')

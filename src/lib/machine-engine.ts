@@ -18,6 +18,7 @@ export class Transition {
     source: State
     target: State
     symbols: string[]
+    symbolsArr: string[][]
     beforeActions: string[]
     afterActions: string[]
 
@@ -25,6 +26,7 @@ export class Transition {
         this.source = source
         this.target = target
         this.symbols = []
+        this.symbolsArr = []
         this.beforeActions = []
         this.afterActions = []
     }
@@ -84,11 +86,11 @@ export class Machine {
         return result;
     }
 
-    transition(source: State, target: State, symbol: string = null, beforeAction: string = null, afterAction: string = null): Transition {
+    transition(source: State, target: State, symbolarr: string[]): Transition {
         if (!source || !target) {
             throw new Error('Expected source and target.')
         }
-
+        let symbol = symbolarr.join(',')
         let result = null
 
         for (const transition of this.transitions) {
@@ -105,16 +107,9 @@ export class Machine {
         
         if (symbol && !result.symbols.includes(symbol)) {
             result.symbols.push(symbol)
+            result.symbolsArr.push(symbolarr)
         }
 
-        if (beforeAction) {
-            result.beforeActions.push(beforeAction)
-        }
-
-        if (afterAction) {
-            result.afterActions.push(afterAction)
-        }
-        
         return result
     }
 

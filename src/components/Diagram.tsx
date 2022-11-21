@@ -10,9 +10,10 @@ interface DiagramPorps {
     input: string
     options: RenderOptions
     machineSetter: (machine: Machine) => void
+    estadoActual: number
 }
 
-export const Diagram = ({ input, options, machineSetter }: DiagramPorps) => {
+export const Diagram = ({ input, options, machineSetter, estadoActual}: DiagramPorps) => {
     const svgRef = useRef<HTMLInputElement>(null);
     const [error, setError] = useState(null);
 
@@ -23,7 +24,7 @@ export const Diagram = ({ input, options, machineSetter }: DiagramPorps) => {
 
             machineSetter(machine)
 
-            const svg = await generateSvgElement(machine, options)
+            const svg = await generateSvgElement(machine, options, estadoActual)
             if (svgRef.current && svg) {
                 while (svgRef.current.firstChild) {
                     svgRef.current.removeChild(svgRef.current.lastChild);
