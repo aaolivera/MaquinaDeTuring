@@ -29,4 +29,8 @@ export class Transicion {
     public get Dir(): Direccion {
         return this._dir;
     }
+
+    public get symbols() : string{
+        return this._lee + ',' + this._escribe + ',' + (this._dir == Direccion.L ? 'L' : this._dir == Direccion.R ? 'R' : 'H');
+    }
 }

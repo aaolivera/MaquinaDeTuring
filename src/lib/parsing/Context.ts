@@ -1,13 +1,13 @@
 import { Source } from './Source'
-import { Machine } from '../machine-engine'
+import { MaquinaTuring } from "../../Dominio/Clases/maquinaTuring";
 
 
 export class Context {
 
     source: Source
-    machine: Machine
+    machine: MaquinaTuring
 
-    constructor(source: Source, machine: Machine) {
+    constructor(source: Source, machine: MaquinaTuring) {
         this.source = source;
         this.machine = machine
     }

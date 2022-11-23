@@ -1,5 +1,6 @@
 import { Estado } from "./estado";
 import { Cabezal } from "./cabezal";
+import { Transicion } from "./transicion";
 
 export class MaquinaTuring {
     private _estados: Estado[];
@@ -10,6 +11,7 @@ export class MaquinaTuring {
     private _cinta: string[];
     private _cabezal: Cabezal;
     private _estadoActual: Estado;
+    private _estadoInicial: Estado;
     private _finalizada: boolean;
     private _exitoso: boolean;
 
@@ -31,6 +33,9 @@ export class MaquinaTuring {
         return this._alfabetoCinta;
     }
 
+    public set Blanco(value) {
+        this._blanco = value;
+    }
     public get Blanco(): string {
         return this._blanco;
     }
@@ -48,6 +53,10 @@ export class MaquinaTuring {
         return this._estadoActual;
     }
 
+    public get EstadoInicial(): Estado {
+        return this._estadoInicial;
+    }
+
     public get Finalizada(): boolean {
         return this._finalizada;
     }
@@ -63,25 +72,35 @@ export class MaquinaTuring {
     //
 
     public constructor() {
+        console.log("construye")
         this._alfabetoCinta = [];
         this._alfabetoEntrada = [];
-        this._blanco = '';
         this._estados = [];
-        this._estadoActual = new Estado(0,false);
+        this._estadoActual = this._estadoInicial = new Estado('0',false, false);
         this._estadosFinales = [];
         this._cinta = [];
+        this._blanco = '_';
+        for (let i = 0; (i < 100); i++) {
+            this.Cinta[i] = this._blanco;
+        }
         this._exitoso = false;
         this._finalizada = false;
         this._cabezal = new Cabezal(this.Cinta);
     }
 
-    public Inicializar(alfabetoEntrada: string[], alfabetoCinta: string[], blanco: string, estados: Estado[], estadoInicial: Estado, estadosFinales: Estado[]) {
-        this._alfabetoCinta = alfabetoCinta;
-        this._alfabetoEntrada = alfabetoEntrada;
+    public Inicializar(blanco: string) {
         this._blanco = blanco;
-        this._estados = estados;
-        this._estadoActual = estadoInicial;
-        this._estadosFinales = estadosFinales;
+        for (let i = 0; (i < 100); i++) {
+            this.Cinta[i] = blanco;
+        }
+    }
+
+    public Limpiar(){
+        this._alfabetoCinta = [];
+        this._alfabetoEntrada = [];
+        this._estados = [];
+        this._estadoActual = this._estadoInicial = new Estado('0',false, false);
+        this._estadosFinales = [];
         this._cinta = [];
         for (let i = 0; (i < 100); i++) {
             this.Cinta[i] = this.Blanco;
@@ -89,6 +108,29 @@ export class MaquinaTuring {
         this._exitoso = false;
         this._finalizada = false;
         this._cabezal = new Cabezal(this.Cinta);
+    }
+
+    public IngresarEstado (estado : Estado){
+        if(!this._estados.some(x => x.Id == estado.Id)){
+            this._estados.push(estado);
+        }
+        if(estado.EsEstadoFinal && !this._estadosFinales.some(x => x.Id == estado.Id)){
+            this._estadosFinales.push(estado);
+        }
+        if(estado.EsEstadoInicial){
+            this._estadoActual = estado;
+            this._estadoInicial = estado;
+        }
+    }
+
+    public IngresarTransicion (source : Estado, transicion : Transicion) : boolean{
+        if(source.Transiciones.some(x => x.Lee == transicion.Lee)){
+            return false; //No se soportan Automatas no deterministicos
+        }
+        source.Transiciones.push(transicion);
+        if(this._alfabetoCinta.indexOf(transicion.Escribe) === -1) this._alfabetoCinta.push(transicion.Escribe)
+        if(this._alfabetoEntrada.indexOf(transicion.Lee) === -1) this._alfabetoEntrada.push(transicion.Lee)
+        return true;
     }
 
     public IngresarSarta(sarta: string): boolean {

@@ -1,4 +1,4 @@
-import { Machine, State, Transition } from "./machine-engine"
+import { MaquinaTuring } from "../Dominio/Clases/maquinaTuring";
 import { Graph, Node, Edge, DotWriter } from './dot'
 
 export class RenderOptions {
@@ -22,101 +22,49 @@ export class RenderOptions {
 
 }
 
-
-class RState {
-
-
-
-}
-
-class RTransition {
-
-}
-
-class RMachine {
-
-    statesMap: Map<string, RState>
-    
-
-
-}
-
-
-export function generateVizCode(machine: Machine, options: RenderOptions, estadoActual: number): string {
+export function generateVizCode(machine: MaquinaTuring, options: RenderOptions, estadoActual: string): string {
     const graph = new Graph()
 
     graph.rankdir = options.dir
-    graph.title = machine.title
 
-    for (const state of machine.states) {
-        const node = graph.createNode(state.name)
-        node.label = state.label ?? state.name
-        node.shape = (state.accepted ? 'doublecircle' : 'circle')
-        if(state.name == 'q'+ estadoActual){
+    for (const state of machine.Estados) {
+        const node = graph.createNode(state.Id)
+        node.label = state.Id
+        node.shape = (state.EsEstadoFinal ? 'doublecircle' : 'circle')
+        if(state.Id == estadoActual){
             node.fillcolor = '#d1e7dd'
             node.style = 'filled'
         }
+
+        let source = state.Id
+        let target = null
+        let symbol: string = '';
+        for (const transition of state.Transiciones.sort((a, b) => a.Destino.Id.localeCompare(b.Destino.Id))) {
+            if(target && target.Id != transition.Destino.Id ){
+                const symbolEdge = graph.createEdge(source, target.Id)
+                symbolEdge.label = symbol
+                target = null;
+                symbol = '';
+            }
+            if(!target || target.Id == transition.Destino.Id){
+                symbol += transition.symbols + '\n';
+                target = transition.Destino;
+            }
+        }
+        if(target){
+            const symbolEdge = graph.createEdge(source, target.Id)
+            symbolEdge.label = symbol
+            target = null;
+        }
     }
 
-    for (const state of machine.states.filter(s => s.initial)) {
-        const initialName = graph.nextName(state.name)
+    for (const state of machine.Estados.filter(s => s.EsEstadoInicial)) {
+        const initialName = graph.nextName(state.Id)
         const initialNode = graph.createNode(initialName)
         initialNode.shape = 'point'
         initialNode.label = ''
 
-        graph.createEdge(initialName, state.name)
-    }
-
-    for (const transition of machine.transitions) {
-        let source = transition.source.name
-        
-        if (!options.ignoreActions) {
-            for (const action of transition.beforeActions) {
-                const actionName = graph.nextName('action')
-                const actionNode = graph.createNode(actionName)
-                actionNode.label = action
-                actionNode.shape = 'box'
-
-                graph.createEdge(source, actionName)
-
-                source = actionName
-            }
-        }
-
-        let symbol: string
-
-        if (transition.symbols.length === 0) {
-            symbol = '\u03B5'  // epsilon lowercase
-        }
-        else {
-            symbol = [...transition.symbols].join('\n')
-        }
-
-        if (options.ignoreActions || transition.afterActions.length == 0) {
-            const symbolEdge = graph.createEdge(source, transition.target.name)
-            symbolEdge.label = symbol
-        }
-        else {
-            for (const action of transition.afterActions) {
-                const actionName = graph.nextName('action');
-                const actionNode = graph.createNode(actionName)
-                actionNode.label = action
-                actionNode.shape = 'box'
-
-                if (symbol !== null) {
-                    const symbolEdge = graph.createEdge(source, actionName)
-                    symbolEdge.label = symbol
-                    symbol = null
-                }
-                else {
-                    graph.createEdge(source, actionName)
-                }
-                
-                source = actionName
-            }
-
-            graph.createEdge(source, transition.target.name)
-        }
+        graph.createEdge(initialName, state.Id)
     }
 
     const writer = new DotWriter()

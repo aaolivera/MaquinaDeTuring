@@ -1,16 +1,18 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import './index.css';
-import App from './App';
+import {App} from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { MaquinaTuring } from "./Dominio/Clases/maquinaTuring";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+const maquina = new MaquinaTuring();
 root.render(
   <React.StrictMode>
-    <App />
+    <App maquinaTuring={maquina}/>
   </React.StrictMode>
 );
 
