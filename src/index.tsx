@@ -5,6 +5,23 @@ import {App} from './App';
 import reportWebVitals from './reportWebVitals';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { MaquinaTuring } from "./Dominio/Clases/maquinaTuring";
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAS8ovUAkiYTdXO3tpWhC8vBLljVOhuhV0",
+  authDomain: "turingmachine-ebab9.firebaseapp.com",
+  projectId: "turingmachine-ebab9",
+  storageBucket: "turingmachine-ebab9.appspot.com",
+  messagingSenderId: "1013656165",
+  appId: "1:1013656165:web:417037ae82475df2e4b48c"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

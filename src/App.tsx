@@ -10,6 +10,7 @@ import { MaquinaTuringModel } from './Dominio/Models/maquinaTuringModel';
 import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Card from 'react-bootstrap/Card';
+import Alert from 'react-bootstrap/Alert';
 import { Split } from './components/Split'
 import { CodeEditor } from './components/CodeEditor'
 import { Diagram } from './components/Diagram'
@@ -22,18 +23,25 @@ interface AppmPorps {
 
 export const  App = ({ maquinaTuring}: AppmPorps) => {
     const [input, setInput] = useState("");
+    const [error, setError] = useState("");
     const [options, setOptions] = useState(new RenderOptions())
     const [maquinaTuringState, setmaquinaTuringState] = useState<MaquinaTuringModel>();
 
     function onChangeInput(e: any) {
         setInput(e.target.value);
         maquinaTuring.Limpiar();
-        parseMachine(e.target.value, maquinaTuring)
+        try{
+            parseMachine(e.target.value, maquinaTuring)
+            setError(null)
+        }
+        catch (e) {
+            setError(String(e))
+        }
         UpdateState();
     }
   
     function Cargar() {
-      //  InicializarMaquina();
+        maquinaTuring.Reiniciar();
         maquinaTuring.IngresarSarta('1199');
         UpdateState();
     }
@@ -57,6 +65,20 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
     useEffect(() => {
         UpdateState()
     },[maquinaTuring])
+
+    function onLoad(e){
+        setInput(e);
+        maquinaTuring.Limpiar();
+        try{
+            parseMachine(e, maquinaTuring)
+            setError(null)
+        }
+        catch (e) {
+            setError(String(e))
+        }
+        UpdateState();
+    }
+
     return (
         <div className="App">
             <body>
@@ -68,9 +90,15 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
                                 <Card.Body>
                                     <div className='row' style={{ height: "100%" }}>
                                         <div className='col-2 col-2-mod diagram-panel split-dir-v split-start'>
-                                            <CodeEditor value={input} onChange={onChangeInput} />
+                                                <div style={{ paddingLeft: "16px", paddingRight: "16px", height: "100%"}}>
+                                                <CodeEditor value={input} onChange={onChangeInput} onLoad={onLoad}/>
+                                                </div>
                                         </div>
                                         <div className='col-10'>
+                                            {error? <Alert key={"danger"} variant={"danger"}>
+          {error}
+        </Alert>: null }
+                                        
                                             <Diagram input={input} options={options} machine={maquinaTuring} estadoActual={maquinaTuringState?.EstadoActualId} />
                                         </div>
                                     </div>
@@ -111,8 +139,6 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
                         </div>
                     </div>
                 </div>
-
-
             </body>
         </div>
     );

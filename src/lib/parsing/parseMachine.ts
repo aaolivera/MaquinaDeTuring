@@ -10,7 +10,7 @@ export function parseMachine(input: string, machine: MaquinaTuring) {
     const ctx = new Context(source, machine)
         let blanco: string = '_';
 
-    machine.Inicializar(blanco);
+    machine.setBlanco(blanco);
     let lastLocation: Location = null
 
     while (source.isAlive()) {

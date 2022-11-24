@@ -33,11 +33,15 @@ export class MaquinaTuring {
         return this._alfabetoCinta;
     }
 
-    public set Blanco(value) {
-        this._blanco = value;
-    }
     public get Blanco(): string {
         return this._blanco;
+    }
+
+    public setBlanco(blanco: string) {
+        this._blanco = blanco;
+        for (let i = 0; (i < 100); i++) {
+            this.Cinta[i] = blanco;
+        }
     }
 
     // 
@@ -72,27 +76,8 @@ export class MaquinaTuring {
     //
 
     public constructor() {
-        console.log("construye")
-        this._alfabetoCinta = [];
-        this._alfabetoEntrada = [];
-        this._estados = [];
-        this._estadoActual = this._estadoInicial = new Estado('0',false, false);
-        this._estadosFinales = [];
-        this._cinta = [];
         this._blanco = '_';
-        for (let i = 0; (i < 100); i++) {
-            this.Cinta[i] = this._blanco;
-        }
-        this._exitoso = false;
-        this._finalizada = false;
-        this._cabezal = new Cabezal(this.Cinta);
-    }
-
-    public Inicializar(blanco: string) {
-        this._blanco = blanco;
-        for (let i = 0; (i < 100); i++) {
-            this.Cinta[i] = blanco;
-        }
+        this.Limpiar();
     }
 
     public Limpiar(){
@@ -102,6 +87,16 @@ export class MaquinaTuring {
         this._estadoActual = this._estadoInicial = new Estado('0',false, false);
         this._estadosFinales = [];
         this._cinta = [];
+        for (let i = 0; (i < 100); i++) {
+            this.Cinta[i] = this.Blanco;
+        }
+        this._exitoso = false;
+        this._finalizada = false;
+        this._cabezal = new Cabezal(this.Cinta);
+    }
+
+    public Reiniciar(){
+        this._estadoActual = this._estadoInicial;
         for (let i = 0; (i < 100); i++) {
             this.Cinta[i] = this.Blanco;
         }
