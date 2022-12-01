@@ -5,7 +5,7 @@ export class MaquinaTuringModel {
     private _cabezalPosicion: number;
     private _estadoActualId: string;
     private _finalizada: boolean;
-    private _exitoso: string;
+    private _exitoso: boolean;
     private _leer: string;
 
     public get Blanco(): string {
@@ -21,7 +21,7 @@ export class MaquinaTuringModel {
         return this._finalizada;
     }
 
-    public get Exitoso(): string {
+    public get Exitoso(): boolean {
         return this._exitoso;
     }
 
@@ -37,7 +37,7 @@ export class MaquinaTuringModel {
     }
     //
 
-    public constructor(cabezalPosicion: number, estadoActualId: string, blanco: string, cinta: string[], exitoso: string, finalizada: boolean, leer: string) {
+    public constructor(cabezalPosicion: number, estadoActualId: string, blanco: string, cinta: string[], exitoso: boolean, finalizada: boolean, leer: string) {
         this._cabezalPosicion = cabezalPosicion;
         this._estadoActualId = estadoActualId;
         this._blanco = blanco;

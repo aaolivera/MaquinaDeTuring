@@ -1,6 +1,6 @@
 const nameFirstChar = /[0-9a-zA-Z_]/
 const nameOtherChar = /[0-9a-zA-Z_-]/ 
-
+const nameWhite = /[.*]/ 
 
 const SPECIAL_MARKS = ['\\', '!', ':', ',']
 
@@ -70,6 +70,12 @@ export class Source {
 
         this.position += token.length
         return true
+    }
+
+    pullWhite(): string {
+        const char = this.content[this.position];
+        this.position++  
+        return char
     }
     
     pullName(): string {

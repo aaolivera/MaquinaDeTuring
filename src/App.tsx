@@ -21,7 +21,7 @@ interface AppmPorps {
     maquinaTuring: MaquinaTuring
 }
 
-export const  App = ({ maquinaTuring}: AppmPorps) => {
+export const App = ({ maquinaTuring }: AppmPorps) => {
     const [input, setInput] = useState("");
     const [error, setError] = useState("");
     const [options, setOptions] = useState(new RenderOptions())
@@ -30,7 +30,7 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
     function onChangeInput(e: any) {
         setInput(e.target.value);
         maquinaTuring.Limpiar();
-        try{
+        try {
             parseMachine(e.target.value, maquinaTuring)
             setError(null)
         }
@@ -39,7 +39,7 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
         }
         UpdateState();
     }
-  
+
     function Cargar() {
         maquinaTuring.Reiniciar();
         maquinaTuring.IngresarSarta('1199');
@@ -57,19 +57,19 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
             maquinaTuring.EstadoActual.Id,
             maquinaTuring.Blanco,
             maquinaTuring.Cinta,
-            maquinaTuring.Exitoso.toString(),
+            maquinaTuring.Exitoso,
             maquinaTuring.Finalizada,
             maquinaTuring.Cabezal.Leer()
         ));
     }
     useEffect(() => {
         UpdateState()
-    },[maquinaTuring])
+    }, [maquinaTuring])
 
-    function onLoad(e){
+    function onLoad(e) {
         setInput(e);
         maquinaTuring.Limpiar();
-        try{
+        try {
             parseMachine(e, maquinaTuring)
             setError(null)
         }
@@ -90,15 +90,24 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
                                 <Card.Body>
                                     <div className='row' style={{ height: "100%" }}>
                                         <div className='col-2 col-2-mod diagram-panel split-dir-v split-start'>
-                                                <div style={{ paddingLeft: "16px", paddingRight: "16px", height: "100%"}}>
-                                                <CodeEditor value={input} onChange={onChangeInput} onLoad={onLoad}/>
-                                                </div>
+                                            <div style={{ paddingLeft: "16px", paddingRight: "16px", height: "100%" }}>
+                                                <CodeEditor value={input} onChange={onChangeInput} onLoad={onLoad} />
+                                            </div>
                                         </div>
                                         <div className='col-10'>
-                                            {error? <Alert key={"danger"} variant={"danger"}>
-          {error}
-        </Alert>: null }
-                                        
+                                            {error ? <Alert key={"danger"} variant={"danger"}>
+                                                {error}
+                                            </Alert> : <Alert key={"primary"} variant={"primary"}>
+                                                <div className='row'>
+                                                    <div className='col'>Q: {maquinaTuring.Estados.map(x => x.Id).join(',')}</div>
+                                                    <div className='col'>Σ: {maquinaTuring.AlfabetoEntrada.join(',')}</div>
+                                                    <div className='col'>Γ: {maquinaTuring.AlfabetoCinta.join(',')}</div>
+                                                    <div className='col'>Δ: {maquinaTuring.Blanco}</div>
+                                                    <div className='col'>q0: {maquinaTuring.EstadoInicial.Id}</div>
+                                                    <div className='col'>F: {maquinaTuring.EstadosFinales.map(x => x.Id).join(',')}</div>
+                                                </div>
+                                            </Alert>}
+
                                             <Diagram input={input} options={options} machine={maquinaTuring} estadoActual={maquinaTuringState?.EstadoActualId} />
                                         </div>
                                     </div>
@@ -111,7 +120,7 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
                         <div className="col-2" style={{ marginBottom: "15px" }}>
                             <Card style={{ marginBottom: "15px", height: "100%" }}>
                                 <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Cabezal</Card.Header>
-                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? "#d1e7dd" : "white", paddingBottom:0 }}>
+                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "white", paddingBottom: 0 }}>
                                     <Card.Title>Estado:  {maquinaTuringState?.EstadoActualId}</Card.Title>
                                     <Card.Text>Actual:  {maquinaTuringState?.Leer}</Card.Text>
                                     <div className="row">
@@ -130,9 +139,9 @@ export const  App = ({ maquinaTuring}: AppmPorps) => {
                         <div className="col-10" style={{ marginBottom: "15px" }}>
                             <Card style={{ marginBottom: "15px", height: "100%" }}>
                                 <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Cinta</Card.Header>
-                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? "#d1e7dd" : "white" }}>
+                                <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "white" }}>
                                     <ListGroup horizontal='sm' numbered style={{ overflow: "auto" }}>
-                                        {maquinaTuringState?.Cinta.map((x, index) => <ListGroup.Item style={{ backgroundColor: maquinaTuringState.CabezalPosicion == index ? "#d1e7dd" : "white" }}>{x}</ListGroup.Item>)}
+                                        {maquinaTuringState?.Cinta.map((x, index) => <ListGroup.Item style={{ backgroundColor: maquinaTuringState.CabezalPosicion == index ? (maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "#fff3cd") : "white" }}>{x}</ListGroup.Item>)}
                                     </ListGroup>
                                 </Card.Body>
                             </Card>

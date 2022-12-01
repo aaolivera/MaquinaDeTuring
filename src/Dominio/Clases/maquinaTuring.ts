@@ -20,16 +20,16 @@ export class MaquinaTuring {
         return this._estados;
     }
 
-    private get EstadosFinales(): Estado[] {
+    public get EstadosFinales(): Estado[] {
         return this._estadosFinales;
     }
 
     // 
-    private get AlfabetoEntrada(): string[] {
+    public get AlfabetoEntrada(): string[] {
         return this._alfabetoEntrada;
     }
 
-    private get AlfabetoCinta(): string[] {
+    public get AlfabetoCinta(): string[] {
         return this._alfabetoCinta;
     }
 
