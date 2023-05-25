@@ -1,3 +1,6 @@
+npm run build  
+ firebase deploy
+
 
 q0:q1
 F:q3

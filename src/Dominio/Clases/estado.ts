@@ -37,7 +37,7 @@ export class Estado {
         this._transiciones = [];
     }
 
-    public Transicionar(leido: string): Transicion | undefined {
-        return this._transiciones.find(o => o.Lee === leido);
+    public Transicionar(leido: string, leido2: string): Transicion | undefined {
+        return this._transiciones.find(o => o.Lee === leido && (!o.Lee2 || o.Lee2 === leido2));
     }
 }

@@ -10,6 +10,7 @@ export class MaquinaTuring {
     private _blanco: string;
     private _cinta: string[];
     private _cabezal: Cabezal;
+    private _cabezal2: Cabezal;
     private _estadoActual: Estado;
     private _estadoInicial: Estado;
     private _finalizada: boolean;
@@ -53,6 +54,10 @@ export class MaquinaTuring {
         return this._cabezal;
     }
 
+    public get Cabezal2(): Cabezal {
+        return this._cabezal2;
+    }
+
     public get EstadoActual(): Estado {
         return this._estadoActual;
     }
@@ -93,6 +98,7 @@ export class MaquinaTuring {
         this._exitoso = false;
         this._finalizada = false;
         this._cabezal = new Cabezal(this.Cinta);
+        this._cabezal2 = new Cabezal(this.Cinta);
     }
 
     public Reiniciar(){
@@ -103,6 +109,7 @@ export class MaquinaTuring {
         this._exitoso = false;
         this._finalizada = false;
         this._cabezal = new Cabezal(this.Cinta);
+        this._cabezal2 = new Cabezal(this.Cinta);
     }
 
     public IngresarEstado (estado : Estado){
@@ -136,6 +143,7 @@ export class MaquinaTuring {
         }
         this.Cinta.splice(0, sartaList.length, ...sartaList);
         this._cabezal = new Cabezal(this.Cinta);
+        this._cabezal2 = new Cabezal(this.Cinta);
         this._exitoso = false;
         this._finalizada = false;
         return true;
@@ -147,13 +155,17 @@ export class MaquinaTuring {
         }
 
         let leido = this.Cabezal.Leer();
-        let transicion = this.EstadoActual.Transicionar(leido);
+        let leido2 = this.Cabezal2.Leer();
+        let transicion = this.EstadoActual.Transicionar(leido, leido2);
         if ((transicion == null)) {
             this._finalizada = true;
         }
         else {
-            this.Cabezal.Transicionar(transicion);
-            this._finalizada = this.Cabezal.Finalizado;
+            this.Cabezal.Transicionar(transicion.Escribe, transicion.Dir);
+            if(transicion.Lee2){
+                this.Cabezal2.Transicionar(transicion.Escribe2, transicion.Dir2);
+            }
+            this._finalizada = this.Cabezal.Finalizado || this.Cabezal2.Finalizado;
             this._estadoActual = transicion.Destino;
             this._exitoso = this.EstadosFinales.includes(this.EstadoActual);
         }

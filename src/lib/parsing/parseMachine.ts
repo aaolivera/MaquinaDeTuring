@@ -66,7 +66,7 @@ function parseStates(ctx: Context): boolean {
             let target = getTarget(ctx);
 
             if (!ctx.source.pullToken(':')) {
-                throw ctx.source.error('Se espera que se defina la transcición: q1->q2 : Σ,Γ,<L R H>.')
+                throw ctx.source.error('1Se espera que se defina la transcición: q1->q2 : Σ,Γ,<L R H>  o  q1->q2 : Σ,Γ,<L R H>;Σ,Γ,<L R H>.')
             }
             ctx.source.skipSpaces()
 
@@ -175,12 +175,20 @@ function getTarget(ctx: Context) {
 function getTransicion(ctx: Context, target: Estado): Transicion {
     const symbol = ctx.source.pullText(['\n'])
     if (symbol === null) {
-        throw ctx.source.error('Se espera que se defina la transcición: q1->q2 : Σ,Γ,<L R H>.')
+        throw ctx.source.error('2Se espera que se defina la transcición: q1->q2 : Σ,Γ,<L R H>  o  q1->q2 : Σ,Γ,<L R H>;Σ,Γ,<L R H>.')
     }
+    //un cabezal
+    var matchs = symbol.match(`^([A-Za-z0-9${ctx.machine.Blanco}]),([A-Za-z0-9${ctx.machine.Blanco}]),(L|R|H)(;([A-Za-z0-9${ctx.machine.Blanco}]),([A-Za-z0-9${ctx.machine.Blanco}]),(L|R|H)){0,1}$`);
 
-    var matchs = symbol.match(`^([A-Za-z0-9${ctx.machine.Blanco}]),([A-Za-z0-9${ctx.machine.Blanco}]),(L|R|H)$`);
+    var cabezal1Lee = matchs[1];
+    var cabezal1Escribe = matchs[2];
+    var cabezal1Direccion = matchs[3] == 'R' ? Direccion.R : matchs[3] == 'L' ? Direccion.L : Direccion.H;
+    var cabezal2Lee = matchs[4];
+    var cabezal2Escribe = matchs[5];
+    var cabezal2Direccion = matchs[6] == 'R' ? Direccion.R : matchs[6] == 'L' ? Direccion.L : Direccion.H;
+    //dos cabezales
     if (matchs) {
-        return new Transicion(target, matchs[1], matchs[2], matchs[3] == 'R' ? Direccion.R : matchs[3] == 'L' ? Direccion.L : Direccion.H);
+        return new Transicion(target, cabezal1Lee, cabezal1Escribe, cabezal1Direccion, cabezal2Lee, cabezal2Escribe, cabezal2Direccion);
     }
-    throw ctx.source.error('Se espera que se defina la transcición: q1->q2 : Σ,Γ,<L R H>:  ' + symbol)
+    throw ctx.source.error('3Se espera que se defina la transcición: q1->q2 : Σ,Γ,<L R H>  o  q1->q2 : Σ,Γ,<L R H>;Σ,Γ,<L R H>:  ' + symbol)
 }

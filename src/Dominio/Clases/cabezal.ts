@@ -35,10 +35,11 @@ export class Cabezal {
         this._cinta[this._posicion] = caracter;
     }
 
-    public Transicionar(transicion: Transicion) {
-        this.Escribir(transicion.Escribe);
+    public Transicionar(escribe: string, dir: Direccion) {
+        let valorAnterior = this.Leer();
         let posicionAnterior = this._posicion;
-        this.Mover(transicion.Dir);
-        this._finalizado = (posicionAnterior === this._posicion);
+        this.Escribir(escribe);
+        this.Mover(dir);
+        this._finalizado = (posicionAnterior === this._posicion && valorAnterior === this.Leer());
     }
 }
