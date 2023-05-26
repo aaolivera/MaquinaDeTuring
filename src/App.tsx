@@ -42,7 +42,7 @@ export const App = ({ maquinaTuring }: AppmPorps) => {
 
     function Cargar() {
         maquinaTuring.Reiniciar();
-        maquinaTuring.IngresarSarta('1199');
+        maquinaTuring.IngresarSarta('AABBBABABABABBBBBABAAAAABA');//prompt('Type here')
         UpdateState();
     }
 
@@ -56,10 +56,14 @@ export const App = ({ maquinaTuring }: AppmPorps) => {
             maquinaTuring.Cabezal.Posicion,
             maquinaTuring.EstadoActual.Id,
             maquinaTuring.Blanco,
-            maquinaTuring.Cinta,
+            maquinaTuring.Cabezal.Cinta,
             maquinaTuring.Exitoso,
             maquinaTuring.Finalizada,
-            maquinaTuring.Cabezal.Leer()
+            maquinaTuring.Cabezal.Leer(),
+            maquinaTuring.DobleCinta,
+            maquinaTuring.Cabezal2.Cinta,
+            maquinaTuring.Cabezal2.Posicion,
+            maquinaTuring.Cabezal2.Leer()
         ));
     }
     useEffect(() => {
@@ -90,7 +94,7 @@ export const App = ({ maquinaTuring }: AppmPorps) => {
                                 <Card.Body>
                                     <div className='row' style={{ height: "100%" }}>
                                         <div className='col-2 col-2-mod diagram-panel split-dir-v split-start'>
-                                            <div style={{ paddingLeft: "16px", paddingRight: "16px", height: "100%" }}>
+                                            <div style={{ height: "100%" }}>
                                                 <CodeEditor value={input} onChange={onChangeInput} onLoad={onLoad} />
                                             </div>
                                         </div>
@@ -141,8 +145,21 @@ export const App = ({ maquinaTuring }: AppmPorps) => {
                                 <Card.Header as="h5" style={{ backgroundColor: "#cfe2ff" }}>Cinta</Card.Header>
                                 <Card.Body style={{ backgroundColor: maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "white" }}>
                                     <ListGroup horizontal='sm' numbered style={{ overflow: "auto" }}>
-                                        {maquinaTuringState?.Cinta.map((x, index) => <ListGroup.Item style={{ backgroundColor: maquinaTuringState.CabezalPosicion == index ? (maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "#fff3cd") : "white" }}>{x}</ListGroup.Item>)}
+                                        {maquinaTuringState?.Cinta.map((x, index) => 
+                                            <ListGroup.Item 
+                                            style={{ 
+                                                backgroundColor: maquinaTuringState.CabezalPosicion == index ? (maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "#fff3cd") : "white" 
+                                                }}>{x}</ListGroup.Item>)}
                                     </ListGroup>
+                                    {maquinaTuringState && maquinaTuringState.DobleCinta && 
+                                        <ListGroup horizontal='sm' numbered style={{ overflow: "auto" }}>
+                                            {maquinaTuringState?.Cinta2.map((x, index) => 
+                                                <ListGroup.Item 
+                                                style={{ 
+                                                    backgroundColor: maquinaTuringState.Cabezal2Posicion == index ? (maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "#fff3cd") : "white" 
+                                                    }}>{x}</ListGroup.Item>)}
+                                        </ListGroup>
+                                    }
                                 </Card.Body>
                             </Card>
                         </div>

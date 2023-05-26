@@ -49,7 +49,8 @@ export class Transicion {
     }
 
     public get symbols() : string{
-        return (this._lee + ',' + this._escribe + ',' + (this._dir == Direccion.L ? 'L' : this._dir == Direccion.R ? 'R' : 'H'))
-            + (this._lee2 ? (this._lee2 + ',' + this._escribe2 + ',' + (this._dir2 == Direccion.L ? 'L' : this._dir2 == Direccion.R ? 'R' : 'H')) : '');
+        var str = (this._lee + ',' + this._escribe + ',' + (this._dir == Direccion.L ? 'L' : this._dir == Direccion.R ? 'R' : 'H'))
+        + (this._lee2 ? (this._lee2 + ',' + this._escribe2 + ',' + (this._dir2 == Direccion.L ? 'L' : this._dir2 == Direccion.R ? 'R' : 'H')) : '');
+        return str;
     }
 }

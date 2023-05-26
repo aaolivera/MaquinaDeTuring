@@ -15,6 +15,7 @@ export class MaquinaTuring {
     private _estadoInicial: Estado;
     private _finalizada: boolean;
     private _exitoso: boolean;
+    private _dobleCinta: boolean;
 
     // 
     public get Estados(): Estado[] {
@@ -46,7 +47,7 @@ export class MaquinaTuring {
     }
 
     // 
-    public get Cinta(): string[] {
+    private get Cinta(): string[] {
         return this._cinta;
     }
 
@@ -70,6 +71,10 @@ export class MaquinaTuring {
         return this._finalizada;
     }
 
+    public get DobleCinta(): boolean {
+        return this._dobleCinta;
+    }
+
     public get Exitoso(): boolean {
         return this._exitoso;
     }
@@ -82,6 +87,7 @@ export class MaquinaTuring {
 
     public constructor() {
         this._blanco = '_';
+        this._dobleCinta = false;
         this.Limpiar();
     }
 
@@ -126,13 +132,16 @@ export class MaquinaTuring {
     }
 
     public IngresarTransicion (source : Estado, transicion : Transicion) : boolean{
-        if(source.Transiciones.some(x => x.Lee == transicion.Lee)){
+        this._dobleCinta = this._dobleCinta || !!transicion.Lee2;
+        if(source.Transiciones.some(x => x.Lee == transicion.Lee && (x.Lee2 == transicion.Lee2 || transicion.Lee2 == '*'))){
             return false; //No se soportan Automatas no deterministicos
         }
         source.Transiciones.push(transicion);
         if(this._alfabetoCinta.indexOf(transicion.Escribe) === -1) this._alfabetoCinta.push(transicion.Escribe)
+        if(this._alfabetoCinta.indexOf(transicion.Escribe2) === -1) this._alfabetoCinta.push(transicion.Escribe2)
         if(this._alfabetoEntrada.indexOf(transicion.Lee) === -1) this._alfabetoEntrada.push(transicion.Lee)
-        return true;
+        if(this._alfabetoEntrada.indexOf(transicion.Lee2) === -1) this._alfabetoEntrada.push(transicion.Lee2)
+        return true;    
     }
 
     public IngresarSarta(sarta: string): boolean {
@@ -143,7 +152,6 @@ export class MaquinaTuring {
         }
         this.Cinta.splice(0, sartaList.length, ...sartaList);
         this._cabezal = new Cabezal(this.Cinta);
-        this._cabezal2 = new Cabezal(this.Cinta);
         this._exitoso = false;
         this._finalizada = false;
         return true;
@@ -161,11 +169,11 @@ export class MaquinaTuring {
             this._finalizada = true;
         }
         else {
-            this.Cabezal.Transicionar(transicion.Escribe, transicion.Dir);
+            this.Cabezal.Transicionar(transicion.Escribe == '*' ? leido : transicion.Escribe, transicion.Dir);
             if(transicion.Lee2){
-                this.Cabezal2.Transicionar(transicion.Escribe2, transicion.Dir2);
+                this.Cabezal2.Transicionar(transicion.Escribe2 == '*' ? leido2 : transicion.Escribe2, transicion.Dir2);
             }
-            this._finalizada = this.Cabezal.Finalizado || this.Cabezal2.Finalizado;
+            this._finalizada = this.Cabezal.Finalizado && this.Cabezal2.Finalizado;
             this._estadoActual = transicion.Destino;
             this._exitoso = this.EstadosFinales.includes(this.EstadoActual);
         }

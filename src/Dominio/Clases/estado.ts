@@ -38,6 +38,6 @@ export class Estado {
     }
 
     public Transicionar(leido: string, leido2: string): Transicion | undefined {
-        return this._transiciones.find(o => o.Lee === leido && (!o.Lee2 || o.Lee2 === leido2));
+        return this._transiciones.find(o => o.Lee === leido && (!o.Lee2 || o.Lee2 === leido2 || o.Lee2 === '*'));
     }
 }

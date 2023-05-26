@@ -17,8 +17,12 @@ export class Cabezal {
         return this._posicion;
     }
 
+    public get Cinta(): string[] {
+        return this._cinta;
+    }
+
     public constructor(cinta: string[]) {
-        this._cinta = cinta;
+        this._cinta = Object.assign([], cinta);
         this._posicion = 0;
         this._finalizado = false;
     }
