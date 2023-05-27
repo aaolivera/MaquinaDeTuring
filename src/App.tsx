@@ -42,7 +42,7 @@ export const App = ({ maquinaTuring }: AppmPorps) => {
 
     function Cargar() {
         maquinaTuring.Reiniciar();
-        maquinaTuring.IngresarSarta('AABBBABABABABBBBBABAAAAABA');//prompt('Type here')
+        maquinaTuring.IngresarSarta(prompt('Type here'));//prompt('Type here')
         UpdateState();
     }
 
@@ -151,14 +151,14 @@ export const App = ({ maquinaTuring }: AppmPorps) => {
                                                 backgroundColor: maquinaTuringState.CabezalPosicion == index ? (maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "#fff3cd") : "white" 
                                                 }}>{x}</ListGroup.Item>)}
                                     </ListGroup>
-                                    {maquinaTuringState && maquinaTuringState.DobleCinta && 
+                                    {maquinaTuringState && maquinaTuringState.DobleCinta ?
                                         <ListGroup horizontal='sm' numbered style={{ overflow: "auto" }}>
                                             {maquinaTuringState?.Cinta2.map((x, index) => 
                                                 <ListGroup.Item 
                                                 style={{ 
                                                     backgroundColor: maquinaTuringState.Cabezal2Posicion == index ? (maquinaTuringState?.Finalizada ? (maquinaTuringState?.Exitoso ? "#d1e7dd" : "#f8d7da") : "#fff3cd") : "white" 
                                                     }}>{x}</ListGroup.Item>)}
-                                        </ListGroup>
+                                        </ListGroup>:<></>
                                     }
                                 </Card.Body>
                             </Card>

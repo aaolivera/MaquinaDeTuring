@@ -9,7 +9,8 @@ export function parseMachine(input: string, machine: MaquinaTuring) {
     const source = new Source(input)
     const ctx = new Context(source, machine)
     let blanco: string = '_';
-
+    
+    machine.setDobleCinta(false);
     machine.setBlanco(blanco);
     let lastLocation: Location = null
 

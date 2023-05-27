@@ -39,6 +39,10 @@ export class MaquinaTuring {
         return this._blanco;
     }
 
+    public setDobleCinta(dobleCinta: boolean) {
+        this._dobleCinta = dobleCinta;
+    }
+
     public setBlanco(blanco: string) {
         this._blanco = blanco;
         for (let i = 0; (i < 100); i++) {
@@ -132,15 +136,15 @@ export class MaquinaTuring {
     }
 
     public IngresarTransicion (source : Estado, transicion : Transicion) : boolean{
-        this._dobleCinta = this._dobleCinta || !!transicion.Lee2;
+        this._dobleCinta = this._dobleCinta || transicion.Lee2 != undefined;
         if(source.Transiciones.some(x => x.Lee == transicion.Lee && (x.Lee2 == transicion.Lee2 || transicion.Lee2 == '*'))){
             return false; //No se soportan Automatas no deterministicos
         }
         source.Transiciones.push(transicion);
-        if(this._alfabetoCinta.indexOf(transicion.Escribe) === -1) this._alfabetoCinta.push(transicion.Escribe)
-        if(this._alfabetoCinta.indexOf(transicion.Escribe2) === -1) this._alfabetoCinta.push(transicion.Escribe2)
-        if(this._alfabetoEntrada.indexOf(transicion.Lee) === -1) this._alfabetoEntrada.push(transicion.Lee)
-        if(this._alfabetoEntrada.indexOf(transicion.Lee2) === -1) this._alfabetoEntrada.push(transicion.Lee2)
+        if(this._alfabetoCinta.indexOf(transicion.Escribe) === -1 && transicion.Escribe && transicion.Escribe != '*') this._alfabetoCinta.push(transicion.Escribe)
+        if(this._alfabetoCinta.indexOf(transicion.Escribe2) === -1 && transicion.Escribe2 && transicion.Escribe2 != '*') this._alfabetoCinta.push(transicion.Escribe2)
+        if(this._alfabetoEntrada.indexOf(transicion.Lee) === -1 && transicion.Lee) this._alfabetoEntrada.push(transicion.Lee)
+      //  if(this._alfabetoEntrada.indexOf(transicion.Lee2) === -1 && transicion.Lee2) this._alfabetoEntrada.push(transicion.Lee2)
         return true;    
     }
 
